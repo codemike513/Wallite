@@ -29,6 +29,18 @@ import clipboard
 
 
 class App(UserControl):
+    global HeightCount
+    HeightCount = 25
+
+    global ColorCount
+    ColorCount = 0
+
+    global CardCount
+    CardCount = 0
+
+    global DataDict
+    DataDict = {}
+
     def WalletContainer(self):
         self.CardList = Column(
             alignment='start',
@@ -44,7 +56,7 @@ class App(UserControl):
         self.InsertButton = IconButton(
             icon=icons.ADD,
             icon_size=16,
-            # on_click=lambda e: self.OpenEntryForm(),
+            on_click=lambda e: self.OpenEntryForm(),
             disabled=True,
         )
 
@@ -100,6 +112,73 @@ class App(UserControl):
         )
 
         return self.WalletContainer
+
+    def EntryForm(self):
+        self.BankName = TextField(
+            label='Card Name',
+            border='underline',
+            text_size=12
+        )
+
+        self.CardNumber = TextField(
+            label='Card Number',
+            border='underline',
+            text_size=12
+        )
+
+        self.CardCVV = TextField(
+            label='Card CVV',
+            border='underline',
+            text_size=12
+        )
+
+        self.EntryForm = AlertDialog(
+            title=Text(
+                'Enter Your Bank Name\nCard Number',
+                text_align='center',
+                size=12,
+            ),
+            content=Column(
+                [
+                    self.BankName,
+                    self.CardNumber,
+                    self.CardCVV,
+                ],
+                spacing=15,
+                height=280
+            ),
+            actions=[
+                TextButton('Insert',
+                           on_click=lambda e: self.CheckEntryForm()),
+                TextButton(
+                    'Cancel', on_click=lambda e: self.CancelEntryForm()),
+            ],
+            actions_alignment='center',
+            on_dismiss=lambda e: self.CancelEntryForm(),
+        )
+
+        return self.EntryForm
+
+    def OpenEntryForm(self):
+        self.dialog = self.EntryForm
+        self.EntryForm.open = True
+        self.update()
+    
+    def CancelEntryForm(self):
+        self.BankName.value, self.CardNumber.value, self.CardCVV.value = (
+            None,
+            None,
+            None,
+        )
+
+        self.BankName.error_text, self.CardNumber.error_text, self.CardCVV.error_text = (
+            None,
+            None,
+            None,
+        )
+
+        self.EntryForm.open = False
+        self.update()
 
 
     def GradientGenerator(self, start, end):
