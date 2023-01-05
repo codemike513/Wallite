@@ -159,11 +159,55 @@ class App(UserControl):
 
         return self.EntryForm
 
+    def CheckEntryForm(self):
+        if len(self.CardNumber.value) == 0:
+            self.CardNumber.error_text = 'Please Enter Your Card Number!'
+            self.update()
+        else:
+            self.CardNumber.error_text = None
+            self.update()
+
+        if len(self.BankName.value) == 0:
+            self.BankName.error_text = 'Please Enter Your Bank Name!'
+            self.update()
+        else:
+            self.BankName.error_text = None
+            self.update()
+
+        if len(self.CardCVV.value) == 0:
+            self.CardCVV.error_text = 'Please Enter Your CVV!'
+            self.update()
+        else:
+            self.CardCVV.error_text = None
+            self.update()
+
+        if (
+            len(self.CardNumber.value)
+            & len(self.BankName.value)
+            & len(self.CardCVV.value)
+            != 0
+        ):
+            asyncio.run(self.InsertDataIntoDatabase())
+            self.CardGenerator(
+                self.BankName.value, self.CardNumber.value, self.CardCVV.value
+            )
+
+    def GradientGenerator(self, start, end):
+        self.ColorGradient = LinearGradient(
+            begin=alignment.bottom_left,
+            end=alignment.top_right,
+            colors=[
+                start,
+                end,
+            ],
+        )
+        return self.ColorGradient
+
     def OpenEntryForm(self):
         self.dialog = self.EntryForm
         self.EntryForm.open = True
         self.update()
-    
+
     def CancelEntryForm(self):
         self.BankName.value, self.CardNumber.value, self.CardCVV.value = (
             None,
@@ -179,18 +223,6 @@ class App(UserControl):
 
         self.EntryForm.open = False
         self.update()
-
-
-    def GradientGenerator(self, start, end):
-        self.ColorGradient = LinearGradient(
-            begin=alignment.bottom_left,
-            end=alignment.top_right,
-            colors=[
-                start,
-                end,
-            ],
-        )
-        return self.ColorGradient
 
     def build(self):
         self.CardColumn = Column()
