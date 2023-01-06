@@ -1,5 +1,4 @@
 import asyncio
-import flet
 from flet import (
     Column,
     SnackBar,
@@ -18,10 +17,7 @@ from flet import (
     Row,
     IconButton,
     icons,
-    border,
     Card,
-    transform,
-    animation,
     Icon
 )
 from settings import ColorList as cl
