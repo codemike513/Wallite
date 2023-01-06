@@ -51,7 +51,7 @@ class App(UserControl):
         self.ImportButton = IconButton(
             icon=icons.DOWNLOAD,
             icon_size=16,
-            # on_click=lambda e: asyncio.run(self.CheckDatabase()),
+            on_click=lambda e: asyncio.run(self.CheckDatabase()),
         )
 
         self.InsertButton = IconButton(
@@ -192,7 +192,7 @@ class App(UserControl):
             self.CardGenerator(
                 self.BankName.value, self.CardNumber.value, self.CardCVV.value
             )
-    
+
     def CardGenerator(self, bank, number, cvv):
         global HeightCount
         global CardCount
@@ -200,7 +200,7 @@ class App(UserControl):
         global DataDict
 
         self.img = Image(
-            src='',
+            src=f"https://img.icons8.com/color/1200/000000/mastercard-logo.png",
             width=80,
             height=80,
             fit='contain'
@@ -210,7 +210,8 @@ class App(UserControl):
         self.number = number
         self.cvv = cvv
 
-        DataDict[CardCount] = {'number': f'{self.number}', 'cvv': f'{self.cvv}'}
+        DataDict[CardCount] = {
+            'number': f'{self.number}', 'cvv': f'{self.cvv}'}
 
         self.CardTest = Card(
             elevation=20,
@@ -276,8 +277,10 @@ class App(UserControl):
                                                     size=15,
                                                     weight='w700',
                                                 ),
-                                                data=(DataDict[CardCount]['number']),
-                                                on_click=lambda e: self.GetValue(e),
+                                                data=(
+                                                    DataDict[CardCount]['number']),
+                                                on_click=lambda e: self.GetValue(
+                                                    e),
                                             ),
                                             Container(
                                                 bgcolor='pink',
@@ -301,7 +304,8 @@ class App(UserControl):
                                                     weight='w700',
                                                 ),
                                                 data=DataDict[CardCount]['cvv'],
-                                                on_click=lambda e: self.GetValue(e),
+                                                on_click=lambda e: self.GetValue(
+                                                    e),
                                             ),
                                         ],
                                     ),
@@ -325,7 +329,7 @@ class App(UserControl):
                 ),
             ),
         )
-        
+
         CardCount += 1
         ColorCount += 1
         HeightCount += 1
@@ -333,7 +337,7 @@ class App(UserControl):
         self.CardList.controls.append(self.CardTest)
         self.CancelEntryForm()
         self.update()
-    
+
     def GetValue(self, e):
         clipboard.copy(e.control.data)
         self.snack.open = True
@@ -378,7 +382,7 @@ class App(UserControl):
         )
         await db.commit()
         await db.close()
-    
+
     async def CheckDatabase(self):
         db = await Database.ConnectDatabase()
         records = await Database.ReadDatabase(db)
@@ -393,7 +397,6 @@ class App(UserControl):
             self.ImportButton.disabled = True
             self.update()
 
-
     def build(self):
         self.CardColumn = Column()
         self.snack = SnackBar(Text('Number copied!'))
@@ -403,7 +406,7 @@ class App(UserControl):
                 Column(
                     alignment='center',
                     controls=[
-                        # self.EntryForm(),
+                        self.EntryForm(),
                         self.WalletContainer(),
                     ],
                 )
