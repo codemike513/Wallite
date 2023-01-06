@@ -191,6 +191,149 @@ class App(UserControl):
             self.CardGenerator(
                 self.BankName.value, self.CardNumber.value, self.CardCVV.value
             )
+    
+    def CardGenerator(self, bank, number, cvv):
+        global HeightCount
+        global CardCount
+        global ColorCount
+        global DataDict
+
+        self.img = Image(
+            src='',
+            width=80,
+            height=80,
+            fit='contain'
+        )
+
+        self.bank = bank
+        self.number = number
+        self.cvv = cvv
+
+        DataDict[CardCount] = {'number': f'{self.number}', 'cvv': f'{self.cvv}'}
+
+        self.CardTest = Card(
+            elevation=20,
+            content=Container(
+                content=(
+                    Column(
+                        controls=[
+                            Row(
+                                alignment='spaceBetween',
+                                controls=[
+                                    Column(
+                                        spacing=1,
+                                        controls=[
+                                            Container(
+                                                alignment=alignment.bottom_left,
+                                                content=Text(
+                                                    'BANK NAME',
+                                                    color='gray',
+                                                    size=9,
+                                                    weight='w500',
+                                                ),
+                                            ),
+                                            Container(
+                                                alignment=alignment.top_left,
+                                                content=Text(
+                                                    self.bank,
+                                                    color='#e2e8f0',
+                                                    size=20,
+                                                    weight='w700',
+                                                ),
+                                            ),
+                                        ],
+                                    ),
+                                    Icon(
+                                        name=icons.SETTINGS_OUTLINED,
+                                        size=16,
+                                    ),
+                                ],
+                            ),
+                            Container(
+                                padding=padding.only(top=10, bottom=20),
+                            ),
+                            Row(
+                                alignment='spaceBetween',
+                                controls=[
+                                    Column(
+                                        spacing=1,
+                                        controls=[
+                                            Container(
+                                                alignment=alignment.bottom_left,
+                                                content=Text(
+                                                    'CARD NUMBER',
+                                                    color='gray',
+                                                    size=9,
+                                                    weight='w500',
+                                                ),
+                                            ),
+                                            Container(
+                                                alignment=alignment.top_left,
+                                                content=Text(
+                                                    f'**** **** **** {self.number[-4:]}',
+                                                    color='#e2e8f0',
+                                                    size=15,
+                                                    weight='w700',
+                                                ),
+                                                data=(DataDict[CardCount]['number']),
+                                                on_click=lambda e: self.GetValue(e),
+                                            ),
+                                            Container(
+                                                bgcolor='pink',
+                                                padding=padding.only(bottom=5),
+                                            ),
+                                            Container(
+                                                alignment=alignment.bottom_left,
+                                                content=Text(
+                                                    'CVV NUMBER',
+                                                    color='gray',
+                                                    size=9,
+                                                    weight='w500',
+                                                ),
+                                            ),
+                                            Container(
+                                                alignment=alignment.top_left,
+                                                content=Text(
+                                                    f'**{self.cvv[-1:]}',
+                                                    color='#e2e8f0',
+                                                    size=13,
+                                                    weight='w700',
+                                                ),
+                                                data=DataDict[CardCount]['cvv'],
+                                                on_click=lambda e: self.GetValue(e),
+                                            ),
+                                        ],
+                                    ),
+                                    Column(
+                                        horizontal_alignment='end',
+                                        controls=[self.img],
+                                    ),
+                                ],
+                            ),
+                        ],
+                    )
+                ),
+                padding=padding.all(12),
+                margin=margin.all(-5),
+                width=310,
+                height=185,
+                border_radius=border_radius.all(18),
+                gradient=self.GradientGenerator(
+                    cl.CARDCOLORS['from'][ColorCount],
+                    cl.CARDCOLORS['to'][ColorCount],
+                ),
+            ),
+        )
+        
+        CardCount += 1
+        ColorCount += 1
+        HeightCount += 1
+
+        self.CardList.controls.append(self.CardTest)
+        self.CancelEntryForm()
+        self.update()
+    
+    # def GetValu
 
     def GradientGenerator(self, start, end):
         self.ColorGradient = LinearGradient(
