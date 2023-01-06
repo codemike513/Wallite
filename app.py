@@ -26,6 +26,7 @@ from flet import (
 )
 from settings import ColorList as cl
 import clipboard
+from dbFunctions import Database
 
 
 class App(UserControl):
@@ -333,7 +334,10 @@ class App(UserControl):
         self.CancelEntryForm()
         self.update()
     
-    # def GetValu
+    def GetValue(self, e):
+        clipboard.copy(e.control.data)
+        self.snack.open = True
+        self.update()
 
     def GradientGenerator(self, start, end):
         self.ColorGradient = LinearGradient(
@@ -366,6 +370,29 @@ class App(UserControl):
 
         self.EntryForm.open = False
         self.update()
+
+    async def InsertDataIntoDatabase(self):
+        db = await Database.ConnectDatabase()
+        records = await Database.InsertDatabase(
+            db, (self.BankName.value, self.CardNumber.value, self.CardCVV.value)
+        )
+        await db.commit()
+        await db.close()
+    
+    async def CheckDatabase(self):
+        db = await Database.ConnectDatabase()
+        records = await Database.ReadDatabase(db)
+        if records:
+            for i, _ in enumerate(records):
+                self.CardGenerator(records[i][0], records[i][1], records[i][2])
+            self.ImportButton.disabled = True
+            self.InsertButton.disabled = False
+            self.update()
+        else:
+            self.InsertButton.disabled = False
+            self.ImportButton.disabled = True
+            self.update()
+
 
     def build(self):
         self.CardColumn = Column()
